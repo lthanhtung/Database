@@ -1,0 +1,117 @@
+Tổng quan
+csdl là gì ? làm gì?
+mô hình csdl: mô hình quan hệ
+hệ QTCSDL là gì? làm gì?
+Kiến trúc hệ QTCSD ? SQL Sever? SQL sever cái nào quan trọng nhất( database engin)
+Tổ chức dữ liệu trong hệ QTCSDL(mấy lớp) 3 lớp: ngoài ,logic,vật lý
+lớp tổ chức vật lý
+SQL server: có 3 loại file
+.mdf
+.ndf : file bổ sung cho mdf
+.ldf: lưu thao tác khi thực hiện lệnh
+
+filegroup: phục vụ việc quản lý (primary).
+ldf ko ở trong 1 filegroup nào hết và mdf luôn nằm trong primary
+file dữ liệu luôn thuộc trong filegroup
+
+Tổ Chức logic
+Các đối tượng csdl
+Schema dùng để quản lý csdl, phân quyền<dbo>
+mdf không thuộc schema
+1 đối tượng thuộc file và schema thuộc file dữ liệu
+SQL? làm gì?
+được sử dụng để thao tác xử lý trên csdl quan hệ/ sử dụng để làm việc trên CSDL quan hệ
+
+4 nhóm lệnh ---DDL
+ 		---DML
+		---DCL
+		---TCL
+
+cú pháp 
+
+
+
+Kiểu Dữ liệu định nghĩa trong SQL
+định nghĩa ngày '2023-04-15'
+
+View ?
+1 bảng động lưu kết quả của 1 câu select
+Sử dụng csdl_ use
+
+Quyền? Role
+Quyền là Giới hạn thao tác của người dùng trên csdl
+
+Role nhóm các quyền
+Cách tạo tài khoảng kết nối csdl cho ứng dụng
+2 bước
++tạo login: csdl master--> connect sql
++tạo user : csdl của ứng dụng
+
+Quyền tạo: Admin
+
+-Tại sao phải sao lưu:đề phòng dữ liệu bị thay đổi trái phép
+-Phân loại sao lưu
+3 loại:
+ 
+file sao lưu được lưu ở:
+
+Quy trình sao lưu và khôi phục
+
+full_-->disfiran-> có thể sen kẻ sao lưu log..
+
+Khôi phục
+full--> disfiran nếu đến thời hạn nếu ko thì sao lưu log theo giới hạn thời gian
+
+phần 2 lập trình
+-Tại sao phải lập trình SQL? bởi vì sql không phải ngôn ngữ lập trình
+và sql ko có định nghĩa cấu trúc điều khiển
+
+-Ngôn ngữ lập trình là T-SQL
+-Cú pháp
+Begin
+
+
+
+end 
+khai bao biến:declare @x nvarchar(20)
+sử dụng biến: 2 cách 
++ set @x=n'sơn'
++ select @x= tennv from nhanvien
+where manv-'001';--ko có where thì lưu cái bản ghi cuối cùng  và biến chỉ lưu 1 trường của 1 bản ghi nếu có bản ghi thì lưu bản ghi cuối cùng còn nếu có nhiều trường thì cần nhiều biến 
+Nếu muốn sử lý nhiều trường thì dùng Biến con trỏ
+
+-Thủ tục là gì - cú pháp
+dùng làm gì? dùng thủ tục để nhóm các thao tác
+-Hàm - cú pháp
+hàm dùng để lấy dữ liệu
+-Trigger là thủ tục tự động thực hiện khi có sự kiện
+có 3 loại DML 
+DDL  Có 2 loại after |for
+instetof
+LOG ON
+dữ liệu sử dụng 2 bảng ảo inserted|deleted
+chủ yếu hỏi bài tập là trigger dml
+
+-cú pháp try...cash
+-transaction dùng đẻ chỉ 1 nhóm thao tác 1 là thành công hoặc không có thao tác được thực hiện luôn gắn với try case
+
+-Go ghép nối các lệnh vì có các lệnh không kết nối được nếu muốn nối phải dùng go
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+

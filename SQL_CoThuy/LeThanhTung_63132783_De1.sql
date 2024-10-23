@@ -1,0 +1,158 @@
+﻿CREATE DATABASE QLMuonSach
+
+Use QLMuonSach
+--Câu 1a
+CREATE TABLE DOC_GIA (
+    MSDG VARCHAR(10) PRIMARY KEY,
+    HoDG NVARCHAR(50),
+    TenDG NVARCHAR(50),
+    Ngaysinh DATE,
+    Gioitinh NVARCHAR(3),
+    Diachi NVARCHAR(100)
+);
+
+CREATE TABLE NHA_XUAT_BAN (
+    MaNXB VARCHAR(10) PRIMARY KEY,
+    TenNXB NVARCHAR(100),
+    Diachi NVARCHAR(100)
+);
+
+CREATE TABLE SACH (
+    MSS VARCHAR(10) PRIMARY KEY,
+    Tensach NVARCHAR(100),
+    Sotrang INT,
+    NamXB INT,
+    MaNXB VARCHAR(10),
+    FOREIGN KEY (MaNXB) REFERENCES NHA_XUAT_BAN (MaNXB)
+);
+CREATE TABLE MUON (
+    MSDG VARCHAR(10),
+    MSS VARCHAR(10),
+    Ngaymuon DATE,
+    Ngaytra DATE,
+	PRIMARY KEY (MSDG,MSS,Ngaymuon),
+    FOREIGN KEY (MSDG) REFERENCES DOC_GIA (MSDG),
+    FOREIGN KEY (MSS) REFERENCES SACH (MSS)
+);
+--Câu 1b
+INSERT INTO DOC_GIA (MSDG, HoDG, TenDG, Ngaysinh, Gioitinh, Diachi)
+VALUES
+    ('000001', 'NGUYEN MINH', N'THUAN', '1999-04-12', 'Nam', '12 Le Loi Nha Trang'),
+    ('000002', 'TRAN ANH', N'NGOC', '2000-02-15', N'Nữ', '6 Quang Trung Nha Trang'),
+    ('000003', 'LE THANH', N'TUNG', '2003-02-20', 'Nam', '10 Nguyen Dinh Chieu Nha Trang'),
+    ('000004', 'PHAM THE', N'HIEN', '2001-09-10', 'Nam', '32 Nguyen Thai Hoc Nha Trang'),
+    ('000005', 'DOAN THANH', N'THAO', '1997-12-25', 'Nu', '7 Nguyen Trai Nha Trang');
+
+INSERT INTO NHA_XUAT_BAN (MaNXB, TenNXB, Diachi)
+VALUES
+    ('001', N'Nhà xuất bản Giáo dục', '12 Nguyen Dinh Chieu TPHCM'),
+    ('002', N'Nhà xuất bản Kiem Lien', '6  Nguyen Thi Minh Khai TPHCM'),
+    ('003', N'Nhà xuất bản Kim Dong', '10 Le Loi Ha Noi'),
+    ('004', N'Nhà xuất bản Thai Van', '21 Le Hong Phong Street Vung Tau'),
+    ('005', N'Nhà xuất bản Kim Thuan', '35 Trung Vung Ha Noi');
+
+INSERT INTO SACH (MSS, Tensach, Sotrang, NamXB, MaNXB)
+VALUES
+    ('XH0001', 'Sach 1', 200, 2020, '001'),
+    ('KT0002', 'Sach 2', 250, 2019, '002'),
+    ('LS0003', 'Sach 3', 180, 2021, '001'),
+    ('CN0004', 'Sach 4', 300, 2018, '003'),
+    ('KT0005', 'Sach 5', 220, 2022, '002');
+
+INSERT INTO MUON (MSDG, MSS, Ngaymuon, Ngaytra)
+VALUES
+    ('000001', 'XH0001', '2023-01-03', '2023-01-14'),
+    ('000002', 'KT0002', '2023-02-10', '2023-05-15'),
+    ('000003', 'LS0003', '2023-08-05', '2023-08-12'),
+    ('000004', 'CN0004', '2023-09-20', '2023-09-30'),
+    ('000005', 'KT0005', '2023-10-15', '2023-10-20'),
+	('000001', 'KT0002', '2023-02-10', '2023-05-15'),
+    ('000001', 'LS0003', '2022-05-05', '2022-05-12'),
+    ('000001', 'CN0004', '2022-09-20', '2022-09-30'),
+    ('000001', 'KT0005', '2022-11-15', '2022-11-20');
+	
+
+--Câu 2a
+SELECT SACH.MSS 'Mã Sách', SACH.Tensach 'Tên Sách', NHA_XUAT_BAN.TenNXB 'Nhà Xuất Bản'
+FROM SACH
+JOIN NHA_XUAT_BAN ON SACH.MaNXB = NHA_XUAT_BAN.MaNXB
+WHERE SACH.Sotrang <= 200 AND NHA_XUAT_BAN.TenNXB = N'Nhà xuất bản Giáo dục';
+
+--Câu 2b
+SELECT DOC_GIA.*, SACH.Tensach 'Tên sách', NHA_XUAT_BAN.TenNXB 'Tên Xuất Bản', MUON.Ngaymuon 'Ngày Mượn', MUON.Ngaytra 'Ngày Trả'
+FROM DOC_GIA
+JOIN MUON  ON DOC_GIA.MSDG = MUON.MSDG
+JOIN SACH ON MUON.MSS = SACH.MSS
+JOIN NHA_XUAT_BAN ON SACH.MaNXB = NHA_XUAT_BAN.MaNXB
+WHERE YEAR(MUON.Ngaymuon) = 2023 AND MONTH(MUON.Ngaymuon) BETWEEN 1 AND 3;
+
+--Câu 2c
+SELECT SACH.Tensach 'Tên sách', 
+    SUM(CASE WHEN MONTH(MUON.Ngaymuon) BETWEEN 1 AND 3 THEN 1 ELSE 0 END) AS Quy1,
+    SUM(CASE WHEN MONTH(MUON.Ngaymuon) BETWEEN 4 AND 6 THEN 1 ELSE 0 END) AS Quy2,
+    SUM(CASE WHEN MONTH(MUON.Ngaymuon) BETWEEN 7 AND 9 THEN 1 ELSE 0 END) AS Quy3,
+    SUM(CASE WHEN MONTH(MUON.Ngaymuon) BETWEEN 10 AND 12 THEN 1 ELSE 0 END) AS Quy4
+FROM SACH
+LEFT JOIN MUON ON SACH.MSS = MUON.MSS
+WHERE YEAR(MUON.Ngaymuon) = 2022
+GROUP BY SACH.Tensach;
+
+--Câu 2d
+DELETE FROM SACH
+WHERE MSS NOT IN (
+    SELECT DISTINCT MUON.MSS
+    FROM MUON
+    WHERE YEAR(MUON.Ngaymuon) BETWEEN 2014 AND 2024
+);
+
+--Câu 2e
+SELECT DOC_GIA.HoDG +' '+ DOC_GIA.TenDG 'Họ tên độc giả'
+FROM DOC_GIA
+WHERE MSDG IN (
+    SELECT MSDG
+    FROM MUON
+    GROUP BY MSDG
+    HAVING COUNT(DISTINCT MSS) = (SELECT COUNT(*) FROM SACH)
+);
+
+--Câu 3a
+CREATE LOGIN SV WITH PASSWORD = '123';
+
+CREATE USER SV FOR LOGIN [SV];
+GRANT SELECT ON DATABASE::QLMuonSach TO [SV];
+GRANT INSERT ON MUON TO [SV];
+
+--Câu 3b
+ CREATE PROC ThongKeSoLuongSachMuon
+    @MSS VARCHAR(10)
+AS
+BEGIN
+    SELECT COUNT(*) 'Tổng Số lượng mượn sách'
+    FROM MUON
+    WHERE MSS = @MSS;
+END;
+
+--Câu 3c
+CREATE TRIGGER CapNhapSoLuongSachMuon
+ON MUON
+AFTER INSERT, DELETE, UPDATE
+AS
+BEGIN
+    UPDATE SACH
+    SET SACH.SoLuongConLai = SACH.SoLuong - (
+        SELECT COUNT(*)
+        FROM MUON
+        WHERE MUON.MSS = SACH.MSS
+    )
+    WHERE EXISTS (
+        SELECT 1
+        FROM INSERTED
+        WHERE INSERTED.MSS = SACH.MSS
+    ) OR EXISTS (
+        SELECT 1
+        FROM DELETED
+        WHERE DELETED.MSS = SACH.MSS
+    );
+END;
+
+

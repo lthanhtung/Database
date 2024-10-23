@@ -1,0 +1,26 @@
+--câu 6
+update Phong
+set GiaNienYet =GiaNienYet * 0.1 + GiaNienYet
+Where LoaiPhong =N'Tổng thống'
+
+--Câu 5(Đúng)
+select P.MaPhong,P.LoaiPhong,Count(CT.MaPhieu) as N'Tổng số lượng đặt phòng'
+from Phong p, ChiTietPDP CT, PhieuDatPhong PDP
+where p.MaPhong = CT.MaPhong and PDP.MaPhieu = CT.MaPhieu and YEAR(PDP.NgayDatPhong) = 2023
+group by P.MaPhong,P.LoaiPhong
+
+
+
+select P.MaPhong,P.LoaiPhong,KH.TenKH
+from Phong p, PhieuDatPhong PDG, KhachHang KH, ChiTietPDP CT
+--where KH.MaKH= PDG.MaKH and p.MaPhong=Ct.MaPhong and YEAR(PDG.NgayDatPhong) = 2023
+--group by P.MaPhong,P.LoaiPhong, KH.MaKH
+
+select MaPhong
+from Phong
+
+select MaPhieu
+from PhieuDatPhong
+
+select TenKH
+from KhachHang

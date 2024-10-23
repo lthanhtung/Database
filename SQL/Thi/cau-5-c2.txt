@@ -1,0 +1,19 @@
+create function Cau5(@phongban	nvarchar(max))
+returns nvarchar
+begin
+	declare @HotenNV	nvarchar
+	declare	@Luong	int
+	select @Luong = MAX(LUONG) 
+	from NHANVIEN
+	join PHONGBAN on PHG = MAPHG
+	where @phongban = MAPHG
+
+
+	select @HotenNV = HONV + ' ' + TENNV
+	from NHANVIEN
+	where PHG = @phongban and LUONG = @Luong
+	return @HotenNV
+end
+
+select dbo.Cau5(1) as N'Nhân viên có lương cao nhất trong phòng'
+drop function Cau5

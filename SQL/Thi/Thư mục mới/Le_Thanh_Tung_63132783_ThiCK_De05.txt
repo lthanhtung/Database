@@ -1,0 +1,61 @@
+use QLDA_LETHANHTUNG
+-----------------------------------------------------------------------
+--Câu 1
+begin
+	declare @demnv	int
+	declare @diadiem	nvarchar(max)
+	declare	@Tenphong	nvarchar(max)
+	declare contro	cursor for 
+	select  pg.TENPHG,DD.DIADIEM,COUNT(MANV)
+	from NHANVIEN nv, DIADIEM_PHG DD, PHONGBAN pg
+	where nv.PHG = dd.MAPHG and dd.MAPHG = pg.MAPHG
+	group by dd.DIADIEM,pg.TENPHG
+open contro
+fetch next from contro into @Tenphong,@diadiem,@demnv
+while @@FETCH_STATUS = 0
+	begin
+	print (N'Tên Phòng ban:' + @Tenphong)
+	print (N'Địa điểm phòng:' + @diadiem)
+	print (N'Số lượng nhân viên:' + CAST(@demnv as varchar(20)))
+	fetch next from contro into @Tenphong,@diadiem,@demnv
+	end
+
+end
+close contro
+deallocate contro
+
+--------------------------------------------------------------------------------------------
+Câu 4
+create procedure Cau4(@manv	varchar(120) output)
+as begin
+
+	declare @Hoten		varchar(200)
+	declare @hotenNQl	varchar(200)
+	select @Hoten = HONV + ' ' + TENNV
+	from NHANVIEN
+	where MANV = @manv
+	select @hotenNQl = HONV + ' ' + TENNV
+	from	NHANVIEN
+	where	MA_NQL is null
+
+	select @Hoten as N'Tên nhân viên', @hotenNQl  as N'Họ tên người quản lý'
+
+
+end
+exec Cau4 @manv = 1
+drop procedure Cau4
+
+-------------------------------------------------------------------------------------------------------------------------------
+Câu 5
+create function Cau5(@phongban	nvarchar(max))
+returns nvarchar
+begin
+	declare @HotenNV	nvarchar
+	declare	@Luong	int
+	
+	select @HotenNV = HONV + ' ' + TENNV, @Luong = MAX(LUONG)
+	from NHANVIEN
+	where PHG = @phongban and LUONG = MAX(LUONG)
+end
+
+select dbo.Cau5(1) as N'Nhân viên có lương cao nhất trong phòng'
