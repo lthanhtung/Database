@@ -1,1 +1,1 @@
-# Database
+# Database trong suốt quá trình học tập.
